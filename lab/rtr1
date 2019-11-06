@@ -1,0 +1,162 @@
+
+Current configuration : 5947 bytes
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console virtual
+hostname rtr1
+boot-start-marker
+boot-end-marker
+vrf definition GS
+ rd 100:100
+ !
+ address-family ipv4
+ exit-address-family
+logging persistent size 1000000 filesize 8192 immediate
+no aaa new-model
+ip name-server 172.16.0.2
+subscriber templating
+multilink bundle-name authenticated
+crypto pki trustpoint TP-self-signed-1876732557
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1876732557
+ revocation-check none
+ rsakeypair TP-self-signed-1876732557
+crypto pki certificate chain TP-self-signed-1876732557
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030 
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274 
+  69666963 6174652D 31383736 37333235 3537301E 170D3139 31313035 30383030 
+  35325A17 0D333030 31303130 30303030 305A3031 312F302D 06035504 03132649 
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 38373637 
+  33323535 37308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201 
+  0A028201 0100AF7E E4F9E274 7B7AA45A FE45EFE5 14BFFB1F 389CE0D8 0A2365A0 
+  567DD071 E2C47CF7 8D16082F 5A77DE9B 2975E97E 93F61F2C 79D4997A 637C6A38 
+  F9B1DDBF B935B3DE 4F66EF44 9926A9D6 7BA3A0F6 283B179B 0CE284F8 9AF5AE37 
+  5EEE19AB E94F5196 892460E0 A54264E6 9B7623BB 21B77BF2 DECE3766 A587792C 
+  2A84FCCA 873BAC31 98729CE7 F14ACF93 D132FB9D AE6573CD A9DC05BC 92A2F7BA 
+  31B3D247 D150BBE7 4CEED5EC CF8D3447 20EE956C A649545D DE25F839 AA67F67C 
+  E2251E68 A1FF5282 0A8D6310 736FD836 21FA9F60 43CABE48 A2D4FA10 081C9BBD 
+  E7CA00CD 680D1CC4 7D0F2E73 0EF7CF6B 9C1F9A85 09766B35 19550D33 84769595 
+  5D6DDD4C DD5F0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF 
+  301F0603 551D2304 18301680 141DA6BE 8D36A454 F8C468F4 40DBB914 11F2629E 
+  55301D06 03551D0E 04160414 1DA6BE8D 36A454F8 C468F440 DBB91411 F2629E55 
+  300D0609 2A864886 F70D0101 05050003 82010100 077584FF 4A648F6C C20E5BBF 
+  6AB6D1E1 3C0E7F59 C9844BB3 0E6E1E5E 7ABFFE9A 855614CC 68FB8F43 905E7491 
+  B4C9ECA6 6F7A0F6E BF155019 F9BE61A8 41C220EE 69FF044A 511E7D1A 60D668AE 
+  24E362AA 9A31881C 77FE4A16 CB4D32BD 3A1C444B A5B7F6A0 0730BF1D 28416C4D 
+  EA7C104F 3F924746 3C02BEC5 24B967D1 B4E9AA8D 0E3D8BB7 DBEEB28D 8D3FCB50 
+  C5B86C8E 48589CE4 E0ED9E76 F5294824 E1A3C6C3 24949810 AB4378A4 E8DB5C2E 
+  3C68A2D0 A5BFB7EC 095F88F8 5F4D2FAC 5B395240 AAE6604B 8074F72B 1C4BC248 
+  55A61AB2 F1AA0BF4 03C1F5A0 5A594977 BC3AEF82 43EF4B10 DD1CEEFC BA20CE8A 
+  15A0DF37 B84558C7 8FC687FF A6EAEDD0 AAB186A6
+  	quit
+license udi pid CSR1000V sn 9D951KEUR39
+no license smart enable
+diagnostic bootup level minimal
+spanning-tree extend system-id
+username ec2-user privilege 15 secret 5 $1$.FXQ$EC7wNhh9VQ4q9hRAvd85b/
+redundancy
+crypto isakmp policy 10
+ encr aes 256
+ hash sha256
+ authentication pre-share
+ group 2
+crypto isakmp key 3eedc83276202b5061d0fa5d880f8805 address 0.0.0.0        
+crypto ipsec transform-set xform esp-aes 256 esp-sha256-hmac 
+ mode transport
+crypto ipsec profile ipsec-prof
+ set transform-set xform 
+interface Loopback0
+ no ip address
+interface Loopback1
+ ip address 10.1.1.101 255.255.255.0
+interface Tunnel0
+ ip address 10.100.100.1 255.255.255.0
+ ip mtu 1476
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet1
+ tunnel destination 3.227.17.23
+interface Tunnel1
+ ip address 10.200.200.1 255.255.255.0
+ tunnel source GigabitEthernet1
+ tunnel destination 3.223.127.96
+interface Tunnel2
+ ip address 10.255.0.254 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp authentication xform
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip tcp adjust-mss 1360
+ ip ospf network broadcast
+ ip ospf hello-interval 30
+ ip ospf priority 255
+ tunnel source GigabitEthernet1
+ tunnel mode gre multipoint
+ tunnel key 1
+ tunnel protection ipsec profile ipsec-prof
+interface VirtualPortGroup0
+ vrf forwarding GS
+ ip address 192.168.35.101 255.255.255.0
+ ip nat inside
+ no mop enabled
+ no mop sysid
+interface GigabitEthernet1
+ ip address dhcp
+ ip nat outside
+ negotiation auto
+ no mop enabled
+ no mop sysid
+router ospf 1
+ redistribute bgp 65000 subnets
+ network 10.1.1.0 0.0.0.255 area 0
+ network 10.100.100.0 0.0.0.255 area 0
+ network 10.255.0.0 0.0.0.255 area 1
+ network 172.16.0.0 0.0.255.255 area 0
+ network 192.168.1.0 0.0.0.255 area 0
+router bgp 65000
+ bgp router-id 1.1.1.1
+ bgp log-neighbor-changes
+ neighbor 10.200.200.2 remote-as 65001
+ !
+ address-family ipv4
+  network 10.1.1.0 mask 255.255.255.0
+  network 10.3.3.103 mask 255.255.255.255
+  network 10.100.100.0 mask 255.255.255.0
+  network 10.200.200.0 mask 255.255.255.0
+  network 172.16.0.0
+  network 192.168.1.0
+  neighbor 10.200.200.2 activate
+ exit-address-family
+iox
+ip nat inside source list GS_NAT_ACL interface GigabitEthernet1 vrf GS overload
+ip forward-protocol nd
+ip tcp window-size 8192
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet1 172.16.0.1
+ip route vrf GS 0.0.0.0 0.0.0.0 GigabitEthernet1 172.16.0.1 global
+ip ssh rsa keypair-name ssh-key
+ip ssh version 2
+ip ssh pubkey-chain
+  username ec2-user
+   key-hash ssh-rsa 977125BD359BFB88DC89171E138A35E9 ec2-user
+ip scp server enable
+ip access-list standard GS_NAT_ACL
+ permit 192.168.35.0 0.0.0.255
+control-plane
+line con 0
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+app-hosting appid guestshell
+ app-vnic gateway1 virtualportgroup 0 guest-interface 0
+  guest-ipaddress 192.168.35.102 netmask 255.255.255.0
+ app-default-gateway 192.168.35.101 guest-interface 0
+ name-server0 8.8.8.8
+end
