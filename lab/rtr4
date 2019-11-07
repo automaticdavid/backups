@@ -1,5 +1,5 @@
 
-Current configuration : 4683 bytes
+Current configuration : 4684 bytes
 version 16.9
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -16,7 +16,7 @@ vrf definition GS
  exit-address-family
 logging persistent size 1000000 filesize 8192 immediate
 no aaa new-model
-ip name-server 172.16.0.2
+ip name-server 172.16.0.17
 subscriber templating
 multilink bundle-name authenticated
 crypto pki trustpoint TP-self-signed-4195651844
